@@ -1,0 +1,150 @@
+.app{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:35px;
+
+    font-family:"Segoe UI",sans-serif;
+
+    background:
+        radial-gradient(circle at top left,#BDE8CA 0%,transparent 30%),
+        radial-gradient(circle at bottom right,#DDF6D2 0%,transparent 30%),
+        linear-gradient(135deg,#DDF6D2,#EAF9E5,#F5FFF4);
+
+}
+
+.dashboard{
+
+    width:92vw;
+
+    max-width:1500px;
+
+    height:90vh;
+
+    background:#F8FFF6;
+
+    border-radius:30px;
+
+    padding:35px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.10),
+        0 10px 25px rgba(0,0,0,.05);
+
+}
+
+.content{
+
+    flex:1;
+
+    display:flex;
+
+    gap:30px;
+
+    margin-top:25px;
+
+    overflow:hidden;
+
+}
+
+.left-panel,
+.right-panel{
+
+    background:#FFFFFF;
+
+    border-radius:25px;
+
+    padding:25px;
+
+    border:1px solid #CDE7C7;
+
+    box-shadow:0 8px 20px rgba(114,191,120,.08);
+
+    overflow-y:auto;
+
+}
+
+.left-panel{
+
+    flex:6;
+
+}
+
+.right-panel{
+
+    flex:4;
+
+}
+
+.left-panel h2,
+.right-panel h2{
+
+    color:#2E3A32;
+
+    font-size:1.45rem;
+
+    font-weight:700;
+
+    margin-bottom:25px;
+
+}
+
+.left-panel::-webkit-scrollbar,
+.right-panel::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+.left-panel::-webkit-scrollbar-track,
+.right-panel::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+.left-panel::-webkit-scrollbar-thumb,
+.right-panel::-webkit-scrollbar-thumb{
+
+    background:#A8D8B9;
+
+    border-radius:20px;
+
+}
+
+.left-panel::-webkit-scrollbar-thumb:hover,
+.right-panel::-webkit-scrollbar-thumb:hover{
+
+    background:#72BF78;
+
+}
+
+@media(max-width:1000px){
+
+    .dashboard{
+
+        width:95vw;
+
+        height:auto;
+
+        min-height:95vh;
+
+    }
+
+    .content{
+
+        flex-direction:column;
+
+    }
+
+}
