@@ -1,0 +1,482 @@
+.composer{
+
+    margin-top:25px;
+
+}
+
+.section-title{
+
+    display:block;
+
+    margin-bottom:15px;
+
+    color:#2E3A32;
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+/* ===========================
+   Title Input
+=========================== */
+
+.title-input{
+
+    width:100%;
+
+    padding:15px 18px;
+
+    border:2px solid #CDE7C7;
+
+    border-radius:18px;
+
+    outline:none;
+
+    background:#FCFFFB;
+
+    color:#2E3A32;
+
+    font-size:16px;
+
+    margin-bottom:20px;
+
+    transition:.3s;
+
+}
+
+.title-input:focus{
+
+    border-color:#72BF78;
+
+    box-shadow:0 0 0 5px rgba(114,191,120,.18);
+
+}
+
+.title-input::placeholder{
+
+    color:#8A9B90;
+
+}
+
+/* ===========================
+   Text Area
+=========================== */
+
+.composer textarea{
+
+    width:100%;
+
+    height:300px;
+
+    resize:none;
+
+    border:2px solid #CDE7C7;
+
+    outline:none;
+
+    border-radius:20px;
+
+    padding:18px;
+
+    background:#FCFFFB;
+
+    color:#2E3A32;
+
+    font-size:16px;
+
+    line-height:1.6;
+
+    transition:.3s;
+
+}
+
+.composer textarea::placeholder{
+
+    color:#8A9B90;
+
+}
+
+.composer textarea:focus{
+
+    border-color:#72BF78;
+
+    box-shadow:0 0 0 5px rgba(114,191,120,.18);
+
+}
+
+/* ===========================
+   Character Counter
+=========================== */
+
+.counter-container{
+
+    margin-top:18px;
+
+}
+
+.counter-text{
+
+    text-align:right;
+
+    color:#2E3A32;
+
+    font-size:15px;
+
+    font-weight:600;
+
+}
+
+.limit-message{
+
+    color:#E63946;
+
+    font-size:14px;
+
+    margin-top:6px;
+
+    text-align:right;
+
+    font-weight:600;
+
+}
+
+/* ===========================
+   Upload Guidelines
+=========================== */
+
+.upload-guidelines{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin:15px 0;
+
+    font-weight:600;
+
+    color:#2E3A32;
+
+}
+
+.guideline-box{
+
+    background:#F5FFF4;
+
+    border:2px solid #CDE7C7;
+
+    border-radius:15px;
+
+    padding:15px;
+
+    color:#3F4D44;
+
+    line-height:1.8;
+
+    margin-bottom:18px;
+
+}
+
+/* ===========================
+   Upload Button
+=========================== */
+
+.composer input[type="file"]{
+
+    width:100%;
+
+    padding:14px;
+
+    border:2px dashed #72BF78;
+
+    border-radius:15px;
+
+    background:#FCFFFB;
+
+    color:#2E3A32;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    margin-bottom:20px;
+
+}
+
+.composer input[type="file"]:hover{
+
+    background:#F6FFF4;
+
+    border-color:#4CAF50;
+
+}
+
+/* ===========================
+   Image Preview
+=========================== */
+
+.preview-image{
+
+    display:block;
+
+    width:260px;
+
+    max-width:100%;
+
+    margin:15px auto;
+
+    border-radius:15px;
+
+    border:3px solid #CDE7C7;
+
+    object-fit:cover;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+}
+
+/* ===========================
+   Buttons
+=========================== */
+
+.button-group{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-top:25px;
+
+}
+
+.save-btn{
+
+    flex:1;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:linear-gradient(135deg,#66BB6A,#43A047);
+
+    color:#fff;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    box-shadow:0 8px 18px rgba(67,160,71,.35);
+
+}
+
+.save-btn:hover:not(:disabled){
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 24px rgba(67,160,71,.45);
+
+}
+
+.save-btn:disabled{
+
+    background:#BDE8CA;
+
+    color:#666;
+
+    cursor:not-allowed;
+
+    box-shadow:none;
+
+}
+
+.cancel-btn{
+
+    padding:16px 24px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:linear-gradient(135deg,#FF8A80,#E53935);
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    box-shadow:0 8px 18px rgba(229,57,53,.25);
+
+}
+
+.cancel-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 22px rgba(229,57,53,.35);
+
+}
+/* ===========================
+   Schedule Input
+=========================== */
+
+.schedule-input{
+
+    width:100%;
+
+    padding:15px 18px;
+
+    border:2px solid #CDE7C7;
+
+    border-radius:18px;
+
+    outline:none;
+
+    background:#FCFFFB;
+
+    color:#2E3A32;
+
+    font-size:16px;
+
+    margin-bottom:20px;
+
+    transition:.3s;
+
+}
+
+.schedule-input:focus{
+
+    border-color:#72BF78;
+
+    box-shadow:0 0 0 5px rgba(114,191,120,.18);
+
+}
+
+/* ===========================
+   View Guideline Button
+=========================== */
+
+.guideline-btn{
+
+    margin-left:auto;
+
+    border:none;
+
+    background:#72BF78;
+
+    color:white;
+
+    padding:8px 16px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.guideline-btn:hover{
+
+    background:#5DAE65;
+
+}
+
+/* ===========================
+   Guideline Modal
+=========================== */
+
+.guideline-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:999;
+
+}
+
+.guideline-content{
+
+    width:450px;
+
+    max-width:92%;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
+
+}
+
+.guideline-content h3{
+
+    color:#2E3A32;
+
+    margin-bottom:18px;
+
+}
+
+.guideline-content ul{
+
+    padding-left:22px;
+
+    line-height:2;
+
+    color:#3F4D44;
+
+}
+
+.close-btn{
+
+    margin-top:20px;
+
+    background:#72BF78;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 26px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    transition:.3s;
+
+}
+
+.close-btn:hover{
+
+    background:#5DAE65;
+
+}

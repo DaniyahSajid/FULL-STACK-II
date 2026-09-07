@@ -1,0 +1,475 @@
+.login-container{
+
+    position:relative;
+
+    overflow:hidden;
+
+    width:100%;
+
+    height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:
+        radial-gradient(circle at top left,#BDE8CA 0%,transparent 30%),
+        radial-gradient(circle at bottom right,#DDF6D2 0%,transparent 30%),
+        linear-gradient(135deg,#DDF6D2,#EAF9E5,#F5FFF4);
+
+}
+
+/* Animated Background */
+
+.login-container::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:650px;
+
+    height:650px;
+
+    background:#72BF78;
+
+    opacity:.10;
+
+    border-radius:50%;
+
+    filter:blur(120px);
+
+    top:-180px;
+
+    left:-180px;
+
+    animation:blobOne 16s ease-in-out infinite;
+
+}
+
+.login-container::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+
+    height:500px;
+
+    background:#A8D8B9;
+
+    opacity:.15;
+
+    border-radius:50%;
+
+    filter:blur(120px);
+
+    right:-150px;
+
+    bottom:-150px;
+
+    animation:blobTwo 18s ease-in-out infinite;
+
+}
+
+/* Login Card */
+
+.login-card{
+
+    position:relative;
+
+    z-index:100;
+
+    width:380px;
+
+    background:rgba(255,255,255,.82);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.4);
+
+    padding:32px;
+
+    border-radius:22px;
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.15);
+
+    text-align:center;
+
+}
+
+.login-card h1{
+
+    font-size:30px;
+
+    color:#2E3A32;
+
+    margin-bottom:8px;
+
+    font-weight:700;
+
+}
+
+.login-card h2{
+
+    color:#555;
+
+    margin-bottom:25px;
+
+    font-size:24px;
+
+}
+
+.login-card form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.login-card input{
+
+    padding:14px 16px;
+
+    border:2px solid #CDE7C7;
+
+    border-radius:14px;
+
+    font-size:15px;
+
+    background:#FCFFFB;
+
+    transition:.3s;
+
+}
+
+.login-card input:focus{
+
+    outline:none;
+
+    border-color:#72BF78;
+
+    box-shadow:0 0 0 5px rgba(114,191,120,.18);
+
+}
+
+.login-card button{
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        135deg,
+        #72BF78,
+        #4CAF50
+    );
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    box-shadow:0 8px 20px rgba(76,175,80,.28);
+
+}
+
+.login-card button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 12px 28px rgba(76,175,80,.38);
+
+}
+
+.error{
+
+    color:#E53935;
+
+    font-weight:600;
+
+    margin-bottom:12px;
+
+}
+
+.demo-users{
+
+    margin-top:25px;
+
+    text-align:left;
+
+    background:#F5FFF4;
+
+    border:1px solid #CDE7C7;
+
+    padding:18px;
+
+    border-radius:14px;
+
+}
+
+.demo-users h3{
+
+    color:#2E3A32;
+
+    margin-bottom:12px;
+
+    font-size:17px;
+
+}
+
+.demo-users p{
+
+    margin:8px 0;
+
+    color:#3F4D44;
+
+    font-size:15px;
+
+}
+
+/* Floating Background Animation */
+
+@keyframes blobOne{
+
+    0%{
+
+        transform:translate(0,0);
+
+    }
+
+    50%{
+
+        transform:translate(80px,50px);
+
+    }
+
+    100%{
+
+        transform:translate(0,0);
+
+    }
+
+}
+
+@keyframes blobTwo{
+
+    0%{
+
+        transform:translate(0,0);
+
+    }
+
+    50%{
+
+        transform:translate(-80px,-60px);
+
+    }
+
+    100%{
+
+        transform:translate(0,0);
+
+    }
+
+}
+/*====================================
+      AI NETWORK BACKGROUND
+====================================*/
+
+.login-container::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+        radial-gradient(circle,#72BF78 2px,transparent 3px),
+
+        radial-gradient(circle,#8AD98A 1.8px,transparent 3px),
+
+        radial-gradient(circle,#4CAF50 2px,transparent 3px);
+
+    background-size:
+
+        180px 180px,
+
+        260px 260px,
+
+        320px 320px;
+
+    animation:moveNodes 28s linear infinite;
+
+    opacity:.55;
+
+}
+
+.login-container::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+        linear-gradient(90deg,
+            transparent 49%,
+            rgba(114,191,120,.18) 50%,
+            transparent 51%),
+
+        linear-gradient(
+            transparent 49%,
+            rgba(114,191,120,.18) 50%,
+            transparent 51%);
+
+    background-size:180px 180px;
+
+    animation:gridMove 40s linear infinite;
+
+    opacity:.25;
+
+}
+
+@keyframes moveNodes{
+
+    from{
+
+        transform:translate(0,0);
+
+    }
+
+    to{
+
+        transform:translate(-180px,-180px);
+
+    }
+
+}
+
+@keyframes gridMove{
+
+    from{
+
+        transform:translate(0,0);
+
+    }
+
+    to{
+
+        transform:translate(180px,180px);
+
+    }
+
+}
+.ai-particle{
+
+    position:absolute;
+
+    width:10px;
+
+    height:10px;
+
+    background:#72BF78;
+
+    border-radius:50%;
+
+    box-shadow:
+
+        0 0 12px #72BF78,
+
+        0 0 25px #72BF78;
+
+    animation:floating 12s linear infinite;
+
+}
+
+.ai-particle:nth-child(1){
+
+    top:15%;
+
+    left:18%;
+
+    animation-duration:12s;
+
+}
+
+.ai-particle:nth-child(2){
+
+    top:28%;
+
+    left:78%;
+
+    animation-duration:18s;
+
+}
+
+.ai-particle:nth-child(3){
+
+    top:75%;
+
+    left:20%;
+
+    animation-duration:15s;
+
+}
+
+.ai-particle:nth-child(4){
+
+    top:82%;
+
+    left:70%;
+
+    animation-duration:20s;
+
+}
+
+.ai-particle:nth-child(5){
+
+    top:45%;
+
+    left:90%;
+
+    animation-duration:17s;
+
+}
+
+@keyframes floating{
+
+    0%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-40px);
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+    }
+
+}

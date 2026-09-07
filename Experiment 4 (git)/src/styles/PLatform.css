@@ -1,0 +1,92 @@
+.platform-section{
+    margin-bottom:30px;
+}
+
+.section-title{
+    display:block;
+    margin-bottom:18px;
+    color:#111827;
+    font-size:18px;
+    font-weight:700;
+}
+
+.platform-options{
+    display:flex;
+    gap:18px;
+}
+
+.platform-card{
+
+    flex:1;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:16px;
+
+    border:2px solid #CDE7C7;
+
+    border-radius:16px;
+
+    background:#FCFFFB;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.platform-card:hover{
+
+    background:#F4FFF2;
+
+    border-color:#72BF78;
+
+}
+
+.platform-card input{
+
+    accent-color:#72BF78;
+
+    transform:scale(1.15);
+
+    margin-right:12px;
+
+    flex-shrink:0;
+
+}
+
+/* IMPORTANT */
+
+.platform-card div{
+
+    flex:1;
+
+    min-width:0;
+
+}
+
+.platform-card h3{
+
+    margin:0;
+
+    color:#111827;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+}
+
+.platform-card p{
+
+    margin-top:4px;
+
+    color:#374151;
+
+    font-size:13px;
+
+}

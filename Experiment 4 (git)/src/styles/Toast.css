@@ -1,0 +1,49 @@
+.toast{
+
+    position:fixed;
+
+    top:50%;
+
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    background:#72BF78;
+
+    color:white;
+
+    padding:18px 35px;
+
+    border-radius:16px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.18);
+
+    animation:toastAnimation .35s ease;
+
+    z-index:9999;
+
+}
+
+@keyframes toastAnimation{
+
+    from{
+
+        opacity:0;
+
+        transform:translate(-50%,-50%) scale(.8);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translate(-50%,-50%) scale(1);
+
+    }
+
+}
