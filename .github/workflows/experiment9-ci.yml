@@ -15,6 +15,7 @@ jobs:
     defaults:
       run:
         working-directory: Experiment 9/experiment9/Experiment 9 (git)/experiment9
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,6 +26,15 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
+          cache-dependency-path: 'Experiment 9/experiment9/Experiment 9 (git)/experiment9/pom.xml'
 
       - name: Run Maven tests
         run: chmod +x mvnw && ./mvnw --batch-mode clean verify
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experiment9-test-reports
+          path: 'Experiment 9/experiment9/Experiment 9 (git)/experiment9/target/surefire-reports/'
+          if-no-files-found: warn
