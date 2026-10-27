@@ -1,0 +1,870 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kafka Lab | Experiment 8</title>
+<style>
+:root {
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --green: #16a34a;
+    --red: #dc2626;
+    --amber: #d97706;
+    --bg: #ffffff;
+    --panel: #ffffff;
+    --soft: #f8fafc;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+.app { display: flex; min-height: 100vh; }
+.sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: #fff;
+    border-right: 1px solid var(--border);
+    padding: 24px 14px 16px;
+    display: flex;
+    flex-direction: column;
+}
+.brand {
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--blue);
+    margin: 0 8px 5px;
+}
+.brand-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin: 0 8px 28px;
+}
+.nav { display: grid; gap: 6px; }
+.nav button {
+    border: 0;
+    background: transparent;
+    color: #475569;
+    text-align: left;
+    padding: 12px 13px;
+    border-radius: 6px;
+}
+.nav button:hover { background: #eff6ff; color: var(--blue); }
+.nav button.active { background: var(--blue); color: white; }
+.sidebar-bottom { margin-top: auto; padding-top: 28px; }
+.connection {
+    background: #dcfce7;
+    color: #166534;
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-bottom: 9px;
+}
+.connection.offline { background: #fee2e2; color: #991b1b; }
+.btn {
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-weight: 600;
+}
+.btn-blue { background: var(--blue); color: #fff; }
+.btn-blue:hover { background: var(--blue-dark); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-red { background: var(--red); color: #fff; }
+.btn-light { background: white; color: var(--text); border-color: var(--border); }
+.btn-light:hover { background: var(--soft); }
+.btn-small { padding: 7px 10px; font-size: 12px; }
+.main { flex: 1; min-width: 0; background: #f8fafc; }
+.topbar {
+    padding: 22px 28px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+.topbar h1 { margin: 0; font-size: 23px; }
+.subtitle { color: var(--muted); margin-top: 5px; font-size: 13px; }
+.experiment {
+    color: var(--blue);
+    background: #dbeafe;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.content { padding: 24px 28px; }
+.page { display: none; }
+.page.active { display: block; }
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+h2 { font-size: 17px; margin: 0; }
+h3 { font-size: 15px; margin: 0 0 17px; }
+.muted { color: var(--muted); }
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+.stat {
+    background: white;
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 17px;
+    box-shadow: 0 1px 2px #0f172a08;
+}
+.stat.green { border-top-color: var(--green); }
+.stat.red { border-top-color: var(--red); }
+.stat.amber { border-top-color: var(--amber); }
+.stat-label {
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .35px;
+}
+.stat-value { font-size: 27px; font-weight: 800; margin-top: 9px; }
+.blue-text { color: var(--blue); }
+.green-text { color: var(--green); }
+.red-text { color: var(--red); }
+.amber-text { color: var(--amber); }
+.card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px #0f172a08;
+}
+.activity-list { display: grid; }
+.activity-row {
+    padding: 12px 2px;
+    border-bottom: 1px solid #eef2f7;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    line-height: 1.5;
+}
+.activity-row:last-child { border-bottom: 0; }
+.activity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--blue);
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+.activity-dot.green { background: var(--green); }
+.activity-dot.red { background: var(--red); }
+.activity-dot.amber { background: var(--amber); }
+.activity-message { flex: 1; overflow-wrap: anywhere; }
+.activity-time { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.field { margin-bottom: 18px; }
+.field.full { grid-column: 1 / -1; }
+label { display: block; font-weight: 700; margin-bottom: 8px; }
+input, textarea, select {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 12px;
+    color: var(--text);
+    background: white;
+    outline: none;
+}
+input:focus, textarea:focus, select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px #2563eb18;
+}
+textarea { resize: vertical; min-height: 105px; }
+.checkbox-row { display: flex; align-items: flex-start; gap: 10px; }
+.checkbox-row input { width: auto; margin-top: 3px; }
+.checkbox-row label { margin: 0; line-height: 1.5; }
+.form-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.notice {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    padding: 13px;
+    border-radius: 6px;
+    margin-top: 16px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.notice.error { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.notice.success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+.table-wrap { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th {
+    text-align: left;
+    padding: 13px 12px;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+    background: #f8fafc;
+    white-space: nowrap;
+}
+td { padding: 14px 12px; border-bottom: 1px solid #edf2f7; vertical-align: top; }
+tbody tr:hover { background: #f8fafc; }
+.status {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.status.accepted { background: #dbeafe; color: #1d4ed8; }
+.status.success { background: #dcfce7; color: #166534; }
+.status.failed { background: #fee2e2; color: #991b1b; }
+.status.duplicate { background: #f1f5f9; color: #475569; }
+.empty { text-align: center; color: var(--muted); padding: 35px 15px; }
+.toolbar { display: flex; gap: 10px; margin-bottom: 15px; }
+.toolbar input { max-width: 350px; }
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+.feature {
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 17px;
+    background: #fff;
+}
+.feature strong { display: block; margin-bottom: 8px; }
+.feature p { color: var(--muted); line-height: 1.55; margin: 0; }
+.policy-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.policy-item { border:1px solid var(--border); border-radius:7px; padding:16px; background:#fff; }
+.policy-item h3 { margin:0 0 9px; }
+.policy-item p, .policy-item li { color:var(--muted); line-height:1.55; }
+.policy-item ul { margin:8px 0 0; padding-left:20px; }
+.code-label { display:inline-block; padding:4px 7px; border-radius:5px; background:#eff6ff; color:#1d4ed8; font-size:11px; font-weight:700; margin-bottom:8px; }
+.failure-details { max-width:360px; overflow-wrap:anywhere; }
+.failure-details summary { cursor:pointer; color:var(--blue); font-weight:600; }
+.failure-details pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:11px; color:#475569; max-height:220px; overflow:auto; }
+@media(max-width:900px) { .policy-grid { grid-template-columns:1fr; } }
+footer { text-align: center; color: var(--muted); padding: 20px; font-size: 12px; }
+@media(max-width: 900px) {
+    .sidebar { width: 185px; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .feature-grid { grid-template-columns: 1fr; }
+    .content { padding: 18px; }
+    .topbar { padding: 18px; }
+}
+@media(max-width: 600px) {
+    .app { display: block; }
+    .sidebar { width: 100%; padding: 14px; border-right: 0; border-bottom: 1px solid var(--border); }
+    .brand-sub, .sidebar-bottom { display: none; }
+    .brand { margin-bottom: 13px; }
+    .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .nav button { padding: 10px; }
+    .topbar h1 { font-size: 19px; }
+    .stats { gap: 9px; }
+    .stat { padding: 13px; }
+    .stat-value { font-size: 23px; }
+    .form-grid { grid-template-columns: 1fr; gap: 0; }
+    .field.full { grid-column: auto; }
+    .card { padding: 16px; }
+    .toolbar { flex-direction: column; }
+    .toolbar input { max-width: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <div class="brand">⚡ Kafka Lab</div>
+        <div class="brand-sub">Experiment 8 · Event Reliability</div>
+
+        <nav class="nav">
+            <button class="active" data-page="dashboard">Dashboard</button>
+            <button data-page="publish">Publish Event</button>
+            <button data-page="monitor">Event Monitor</button>
+            <button data-page="dlq">Dead Letter Queue</button>
+            <button data-page="practical">Practical Demo</button>
+            <button data-page="policy">Read/Write Policy</button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div id="connection" class="connection">Checking API...</div>
+            <button id="resetButton" class="btn btn-light" style="width:100%">Reset Local Log</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="subtitle">Reliable event processing using Spring Boot and Apache Kafka</div>
+            </div>
+            <span class="experiment">EXPERIMENT 8</span>
+        </header>
+
+        <div class="content">
+            <section id="dashboard" class="page active">
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-label">Events Submitted</div>
+                        <div id="totalCount" class="stat-value blue-text">0</div>
+                    </div>
+                    <div class="stat green">
+                        <div class="stat-label">API Accepted</div>
+                        <div id="acceptedCount" class="stat-value green-text">0</div>
+                    </div>
+                    <div class="stat red">
+                        <div class="stat-label">Failure Tests</div>
+                        <div id="failureCount" class="stat-value red-text">0</div>
+                    </div>
+                    <div class="stat amber">
+                        <div class="stat-label">Duplicate Attempts</div>
+                        <div id="duplicateCount" class="stat-value amber-text">0</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-heading">
+                        <h2>Recent Activity</h2>
+                        <button class="btn btn-light btn-small" data-go="monitor">View Event Log</button>
+                    </div>
+                    <div id="recentActivity" class="activity-list"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Reliability Features</h3>
+                    <div class="feature-grid">
+                        <div class="feature">
+                            <strong class="blue-text">Retry Strategy</strong>
+                            <p>Retries event processing after a failure.</p>
+                        </div>
+                        <div class="feature">
+                            <strong class="green-text">Exponential Backoff</strong>
+                            <p>Increases the waiting time between retry attempts.</p>
+                        </div>
+                        <div class="feature">
+                            <strong class="red-text">Dead Letter Queue</strong>
+                            <p>Routes events that exhaust retries to the configured DLQ.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="publish" class="page">
+                <div class="card">
+                    <h2 style="margin-bottom:22px">Publish an Event</h2>
+                    <form id="eventForm">
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="eventId">Event ID</label>
+                                <input id="eventId" placeholder="Leave blank to generate an ID">
+                            </div>
+                            <div class="field">
+                                <label for="eventContent">Event Content</label>
+                                <input id="eventContent" placeholder="Enter event content" required>
+                            </div>
+                            <div class="field full">
+                                <div class="checkbox-row">
+                                    <input type="checkbox" id="simulateFailure">
+                                    <label for="simulateFailure">Simulate processing failure to test retries and DLQ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-blue" type="submit">Publish Event</button>
+                            <button class="btn btn-light" type="button" id="sendDuplicate">Send Same Event Again</button>
+                            <button class="btn btn-red" type="button" id="publishFailure">Test Failure</button>
+                        </div>
+                    </form>
+                    <div id="publishResult" class="notice">Ready to publish an event.</div>
+                </div>
+                <div class="card">
+                    <h3>How to test</h3>
+                    <p class="muted">Publish a normal event first. Re-send the same Event ID to test duplicate handling. Use Test Failure to trigger the consumer's configured retry and dead-letter mechanism.</p>
+                </div>
+            </section>
+
+            <section id="monitor" class="page">
+                <div class="card">
+                    <div class="section-heading">
+                        <h2>Event Monitor</h2>
+                        <button class="btn btn-light btn-small" id="refreshLog">Refresh</button>
+                    </div>
+                    <p class="muted">This table records frontend submissions and API responses on this browser. It does not independently confirm consumer processing status.</p>
+                    <div class="toolbar">
+                        <input id="searchEvents" placeholder="Search by event ID or content">
+                        <button class="btn btn-light" id="clearSearch">Clear Search</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Event ID</th>
+                                    <th>Content</th>
+                                    <th>Request</th>
+                                    <th>API Status</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="eventRows"></tbody>
+                        </table>
+                    </div>
+                    <div id="emptyEvents" class="empty">No events submitted from this browser yet.</div>
+                </div>
+            </section>
+
+            <section id="dlq" class="page">
+                <div class="card">
+                    <div class="section-heading">
+                        <h2>Dead Letter Queue</h2>
+                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                            <span class="status failed">scheduled-posts-dlq</span>
+                            <button class="btn btn-blue" id="refreshDlq">Refresh Messages</button>
+                        </div>
+                    </div>
+                    <p class="muted">Actual messages read from Kafka after processing retries have been exhausted. Kafka ordering is guaranteed within each partition; offsets are partition-specific.</p>
+                    <div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:460px;margin-top:18px">
+                        <div class="stat red">
+                            <div class="stat-label">DLQ Messages Loaded</div>
+                            <div id="dlqCount" class="stat-value red-text">0</div>
+                        </div>
+                        <div class="stat green">
+                            <div class="stat-label">Source Topic</div>
+                            <div class="stat-value green-text" style="font-size:17px">Kafka DLQ</div>
+                        </div>
+                    </div>
+                    <div id="dlqResult" class="notice">Click Refresh Messages to load records from Kafka.</div>
+                    <div class="table-wrap" style="margin-top:18px">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Event ID</th>
+                                    <th>Content</th>
+                                    <th>Status</th>
+                                    <th>Partition</th>
+                                    <th>Offset</th>
+                                    <th>Timestamp</th>
+                                    <th>Failure Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dlqRows"></tbody>
+                        </table>
+                    </div>
+                    <div id="dlqEmpty" class="empty">No DLQ messages loaded yet.</div>
+                    <div style="margin-top:18px">
+                        <h3>Manual verification (PowerShell)</h3>
+                        <div class="notice" style="color:#1e293b;background:#f8fafc;border-color:#e2e8f0">&amp; "D:\kafka\bin\windows\kafka-console-consumer.bat" --bootstrap-server localhost:9092 --topic scheduled-posts-dlq --from-beginning --timeout-ms 5000</div>
+                        <button class="btn btn-light" id="copyDlq">Copy Command</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practical" class="page">
+                <div class="card">
+                    <h2 style="margin-bottom:18px">Practical Demonstration</h2>
+                    <h3>1. Successful event</h3>
+                    <p class="muted">Publish a normal event and verify the successful processing message in the Spring Boot terminal.</p>
+                    <h3>2. Duplicate event</h3>
+                    <p class="muted">Submit the same event ID again and verify the duplicate-skipped message in the consumer logs.</p>
+                    <h3>3. Retry and exponential backoff</h3>
+                    <p class="muted">Enable simulated failure and observe retry messages and increasing wait times in the backend logs.</p>
+                    <h3>4. Dead-letter queue</h3>
+                    <p class="muted">After retries are exhausted, use the Kafka console consumer to confirm the event was published to the DLQ.</p>
+                    <h3>5. Idempotency limitation</h3>
+                    <p class="muted">The current processed-event set is in memory, so it resets when the application restarts. Durable idempotency would require persistent storage.</p>
+                </div>
+            </section>
+
+            <section id="policy" class="page">
+                <div class="card">
+                    <h2 style="margin-bottom:8px">Kafka Read/Write Policy</h2>
+                    <p class="muted">This page documents the application's configured data flow. It is an application-level policy summary, not Kafka ACL enforcement.</p>
+                    <div class="policy-grid" style="margin-top:18px">
+                        <div class="policy-item">
+                            <span class="code-label">WRITE</span>
+                            <h3>Producer → scheduled-posts</h3>
+                            <p>The Spring Boot REST API accepts a post event and the producer publishes it to the main Kafka topic.</p>
+                            <ul><li>Endpoint: <strong>POST /api/posts</strong></li><li>Topic: <strong>scheduled-posts</strong></li><li>Producer acknowledgements are configured as <strong>all</strong>.</li></ul>
+                        </div>
+                        <div class="policy-item">
+                            <span class="code-label">READ</span>
+                            <h3>Consumer ← scheduled-posts</h3>
+                            <p>The ScheduledPostConsumer listens to the main topic using consumer group <strong>scheduled-posts-group</strong>.</p>
+                            <ul><li>Reads events from <strong>scheduled-posts</strong>.</li><li>Checks event IDs before processing.</li><li>Failures go through the configured retry handler.</li></ul>
+                        </div>
+                        <div class="policy-item">
+                            <span class="code-label">WRITE AFTER FAILURE</span>
+                            <h3>Recoverer → scheduled-posts-dlq</h3>
+                            <p>When processing still fails after retries, the configured dead-letter recoverer publishes the failed record to the DLQ.</p>
+                            <ul><li>Destination: <strong>scheduled-posts-dlq</strong></li><li>Configured to preserve the source partition number.</li><li>Failure headers contain exception and source-record details.</li></ul>
+                        </div>
+                        <div class="policy-item">
+                            <span class="code-label">READ FOR INSPECTION</span>
+                            <h3>DLQ viewer → scheduled-posts-dlq</h3>
+                            <p><strong>GET /api/dlq</strong> reads DLQ records for display using a separate temporary consumer identity.</p>
+                            <ul><li>Reads from the beginning for inspection.</li><li>Shows event ID, content, partition, offset, timestamp and failure headers.</li><li>Refreshing reads the topic again; it does not delete messages.</li></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 style="margin-bottom:12px">Ordering and Duplicate Prevention</h2>
+                    <div class="policy-grid">
+                        <div class="policy-item">
+                            <h3>Ordering policy</h3>
+                            <p>Kafka guarantees order within a single partition. With three partitions, records in different partitions do not have one guaranteed global order. The configured DLQ mapping sends a failed record to the matching partition number.</p>
+                            <p><strong>Explain to the teacher:</strong> Partition and offset identify a record's position within that partition. Offsets from different partitions are not one global sequence.</p>
+                        </div>
+                        <div class="policy-item">
+                            <h3>Idempotency policy</h3>
+                            <p>The consumer checks <strong>eventId</strong>. If the ID is already in the processed-ID set, the event is skipped. Otherwise, it processes the event and records the ID after success.</p>
+                            <p><strong>Limitation:</strong> the current set is in memory and resets when Spring Boot restarts. Persistent storage is required for durable deduplication across restarts.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="notice">Security note: this is a documented read/write flow, not a Kafka ACL security boundary. The current local PLAINTEXT setup does not demonstrate authenticated topic-level permissions. ACLs can be added separately for production-style access control.</div>
+            </section>
+
+        </div>
+        <footer>Experiment 8 · Retry Strategy · Exponential Backoff · DLQ · Idempotency</footer>
+    </main>
+</div>
+
+<script>
+const STORAGE_KEY = "experiment8-event-log-v1";
+let eventLog = [];
+let lastEvent = null;
+
+try {
+    eventLog = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    if (!Array.isArray(eventLog)) eventLog = [];
+} catch {
+    eventLog = [];
+}
+
+const $ = id => document.getElementById(id);
+
+function saveLog() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(eventLog.slice(0, 300)));
+    } catch (error) {
+        console.warn("Could not save local event log.", error);
+    }
+}
+
+function timeLabel(value) {
+    return new Date(value).toLocaleTimeString();
+}
+
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+    })[char]);
+}
+
+function addLog(event, requestType, apiStatus, message) {
+    eventLog.unshift({
+        eventId: event.eventId,
+        content: event.content,
+        simulateFailure: event.simulateFailure,
+        requestType,
+        apiStatus,
+        message,
+        time: new Date().toISOString()
+    });
+    eventLog = eventLog.slice(0, 300);
+    saveLog();
+    render();
+}
+
+function render() {
+    const total = eventLog.length;
+    const accepted = eventLog.filter(e => e.apiStatus === "Accepted").length;
+    const failures = eventLog.filter(e => e.simulateFailure).length;
+    const duplicates = eventLog.filter(e => e.requestType === "Duplicate").length;
+
+    $("totalCount").textContent = total;
+    $("acceptedCount").textContent = accepted;
+    $("failureCount").textContent = failures;
+    $("duplicateCount").textContent = duplicates;
+
+    $("recentActivity").innerHTML = eventLog.slice(0, 8).map(e => {
+        const dotClass = e.apiStatus === "Accepted" ? "green" :
+            e.apiStatus === "Error" ? "red" : "amber";
+        return `<div class="activity-row">
+            <span class="activity-dot ${dotClass}"></span>
+            <div class="activity-message">
+                <strong>${escapeHtml(e.eventId)}</strong> — ${escapeHtml(e.message)}
+                <div class="muted">${escapeHtml(e.content)}</div>
+            </div>
+            <span class="activity-time">${escapeHtml(timeLabel(e.time))}</span>
+        </div>`;
+    }).join("") || '<div class="empty">No activity recorded yet.</div>';
+
+    renderTable();
+}
+
+function renderTable() {
+    const query = $("searchEvents").value.trim().toLowerCase();
+    const filtered = eventLog.filter(e =>
+        String(e.eventId).toLowerCase().includes(query) ||
+        String(e.content).toLowerCase().includes(query)
+    );
+
+    $("eventRows").innerHTML = filtered.map(e => {
+        const cls = e.apiStatus === "Accepted" ? "accepted" :
+            e.apiStatus === "Error" ? "failed" : "duplicate";
+        return `<tr>
+            <td>${escapeHtml(e.eventId)}</td>
+            <td>${escapeHtml(e.content)}</td>
+            <td>${escapeHtml(e.requestType)}${e.simulateFailure ? " / Failure test" : ""}</td>
+            <td><span class="status ${cls}">${escapeHtml(e.apiStatus)}</span></td>
+            <td>${escapeHtml(new Date(e.time).toLocaleString())}</td>
+        </tr>`;
+    }).join("");
+
+    $("emptyEvents").style.display = filtered.length ? "none" : "block";
+}
+
+function showPage(pageId) {
+    document.querySelectorAll(".page").forEach(page =>
+        page.classList.toggle("active", page.id === pageId)
+    );
+    document.querySelectorAll("[data-page]").forEach(button =>
+        button.classList.toggle("active", button.dataset.page === pageId)
+    );
+    const titles = {
+        dashboard: "Dashboard",
+        publish: "Publish Event",
+        monitor: "Event Monitor",
+        dlq: "Dead Letter Queue",
+        practical: "Practical Demo",
+        policy: "Read/Write Policy"
+    };
+    $("pageTitle").textContent = titles[pageId] || "Dashboard";
+    if (pageId === "dlq") loadDlqMessages();
+}
+
+document.querySelectorAll("[data-page]").forEach(button => {
+    button.addEventListener("click", () => showPage(button.dataset.page));
+});
+document.querySelectorAll("[data-go]").forEach(button => {
+    button.addEventListener("click", () => showPage(button.dataset.go));
+});
+
+async function checkApi() {
+    try {
+        const response = await fetch("/api/posts", { method: "GET" });
+        // A 404/405 is expected: the current backend only defines POST /api/posts.
+        if (response.status === 404 || response.status === 405) {
+            $("connection").textContent = "Backend running";
+            $("connection").className = "connection";
+        } else {
+            $("connection").textContent = response.ok ? "API reachable" : "API response received";
+            $("connection").className = "connection";
+        }
+    } catch {
+        $("connection").textContent = "API unreachable";
+        $("connection").className = "connection offline";
+    }
+}
+
+async function publishEvent(event, requestType) {
+    const result = $("publishResult");
+    result.className = "notice";
+    result.textContent = "Sending event to the API...";
+
+    try {
+        const response = await fetch("/api/posts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(event)
+        });
+        const responseText = await response.text();
+
+        if (!response.ok) {
+            throw new Error(responseText || `HTTP ${response.status}`);
+        }
+
+        let responseData;
+        try { responseData = JSON.parse(responseText); }
+        catch { responseData = responseText; }
+
+        addLog(event, requestType, "Accepted",
+            requestType === "Duplicate" ? "Duplicate request accepted by API" :
+            event.simulateFailure ? "Failure test accepted by API" :
+            "Event accepted by API");
+
+        result.className = "notice success";
+        result.textContent =
+            "API accepted the event. This does not confirm consumer completion.\n" +
+            (typeof responseData === "string" ? responseData :
+                JSON.stringify(responseData, null, 2));
+        return true;
+    } catch (error) {
+        addLog(event, requestType, "Error", "API request failed: " + error.message);
+        result.className = "notice error";
+        result.textContent = "Request failed: " + error.message;
+        return false;
+    }
+}
+
+function buildEvent(forceFailure = false) {
+    const eventId = $("eventId").value.trim() || crypto.randomUUID();
+    const content = $("eventContent").value.trim();
+    if (!content) {
+        $("publishResult").className = "notice error";
+        $("publishResult").textContent = "Please enter event content.";
+        return null;
+    }
+    $("eventId").value = eventId;
+    return {
+        eventId,
+        content,
+        simulateFailure: forceFailure || $("simulateFailure").checked
+    };
+}
+
+$("eventForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    const newEvent = buildEvent();
+    if (!newEvent) return;
+    lastEvent = { ...newEvent };
+    await publishEvent(newEvent, "Publish");
+});
+
+$("sendDuplicate").addEventListener("click", async () => {
+    if (!lastEvent) {
+        $("publishResult").className = "notice error";
+        $("publishResult").textContent = "Publish an event first, then resend the same event ID.";
+        return;
+    }
+    await publishEvent({ ...lastEvent }, "Duplicate");
+});
+
+$("publishFailure").addEventListener("click", async () => {
+    const failedEvent = buildEvent(true);
+    if (!failedEvent) return;
+    lastEvent = { ...failedEvent };
+    await publishEvent(failedEvent, "Failure Test");
+});
+
+$("searchEvents").addEventListener("input", renderTable);
+$("refreshLog").addEventListener("click", render);
+$("clearSearch").addEventListener("click", () => {
+    $("searchEvents").value = "";
+    renderTable();
+});
+
+$("resetButton").addEventListener("click", () => {
+    if (!confirm("Clear the local browser log? This will not delete Kafka messages.")) return;
+    eventLog = [];
+    saveLog();
+    render();
+});
+
+$("copyDlq").addEventListener("click", async () => {
+    const command = '& "D:\\kafka\\bin\\windows\\kafka-console-consumer.bat" --bootstrap-server localhost:9092 --topic scheduled-posts-dlq --from-beginning --timeout-ms 5000';
+    try {
+        await navigator.clipboard.writeText(command);
+        $("copyDlq").textContent = "Copied";
+        setTimeout(() => $("copyDlq").textContent = "Copy Command", 1500);
+    } catch {
+        alert(command);
+    }
+});
+
+async function loadDlqMessages() {
+    const button = $("refreshDlq");
+    const result = $("dlqResult");
+    const rows = $("dlqRows");
+    const empty = $("dlqEmpty");
+    const count = $("dlqCount");
+
+    if (!button || !result || !rows || !empty || !count) return;
+
+    button.disabled = true;
+    button.textContent = "Loading...";
+    result.className = "notice";
+    result.textContent = "Reading messages from Kafka...";
+    rows.innerHTML = "";
+    empty.style.display = "none";
+
+    try {
+        const response = await fetch("/api/dlq");
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.details || data.error || `HTTP ${response.status}`);
+        }
+        if (!Array.isArray(data)) {
+            throw new Error(data.details || data.error || "Unexpected response from the DLQ API.");
+        }
+
+        count.textContent = data.length;
+        result.className = "notice success";
+        result.textContent = `Loaded ${data.length} message(s) from scheduled-posts-dlq.`;
+
+        rows.innerHTML = data.map(item => {
+            const timestamp = item.timestamp !== null && item.timestamp !== undefined && Number(item.timestamp) > 0
+                ? new Date(Number(item.timestamp)).toLocaleString()
+                : "Unavailable";
+            const details = item.failureDetails && Object.keys(item.failureDetails).length
+                ? JSON.stringify(item.failureDetails, null, 2)
+                : "No failure headers available";
+            const shortReason = item.failureDetails && item.failureDetails["kafka_dlt-exception-message"]
+                ? item.failureDetails["kafka_dlt-exception-message"]
+                : "Processing failed; expand for diagnostic headers";
+
+            return `<tr>
+                <td>${escapeHtml(item.eventId || "Unknown")}</td>
+                <td>${escapeHtml(item.content || "")}</td>
+                <td><span class="status failed">DEAD LETTER</span></td>
+                <td>${escapeHtml(item.partition ?? "—")}</td>
+                <td>${escapeHtml(item.offset ?? "—")}</td>
+                <td>${escapeHtml(timestamp)}</td>
+                <td class="failure-details"><div>${escapeHtml(shortReason)}</div><details><summary>View failure details</summary><pre>${escapeHtml(details)}</pre></details></td>
+            </tr>`;
+        }).join("");
+
+        empty.style.display = data.length ? "none" : "block";
+        if (!data.length) empty.textContent = "No messages found in the dead-letter topic.";
+    } catch (error) {
+        count.textContent = "—";
+        result.className = "notice error";
+        result.textContent = "Could not load DLQ messages: " + error.message;
+        empty.style.display = "block";
+        empty.textContent = "Check that Kafka and Spring Boot are running and that GET /api/dlq is available.";
+    } finally {
+        button.disabled = false;
+        button.textContent = "Refresh Messages";
+    }
+}
+
+$("refreshDlq").addEventListener("click", loadDlqMessages);
+
+render();
+checkApi();
+</script>
+</body>
+</html>
